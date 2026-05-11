@@ -10,7 +10,9 @@ fn main() {
             rocm_top::get_vram_used,
             rocm_top::get_vram_total,
             rocm_top::get_power_mode,
-            rocm_top::get_charger_status
+            rocm_top::get_charger_status,
+            rocm_top::get_runtime_pm,
+            rocm_top::get_all_stats
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

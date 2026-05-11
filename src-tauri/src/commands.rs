@@ -106,6 +106,31 @@ pub fn get_charger_status() -> bool {
         .unwrap_or(false)
 }
 
+/// Read runtime PM from sysfs
+#[tauri::command]
+pub fn get_runtime_pm() -> String {
+    let path = "/sys/bus/pci/devices/0000:63:00.0/power/control";
+    fs::read_to_string(path)
+        .ok()
+        .map(|s| s.trim().to_string())
+        .unwrap_or_else(|| "unknown".to_string())
+}
+
+/// Get all GPU stats in one call
+#[tauri::command]
+pub fn get_all_stats() -> GpuStats {
+    GpuStats {
+        temperature: get_temperature(),
+        gpu_clock: get_gpu_clock(),
+        gpu_busy: get_gpu_busy(),
+        vram_used: get_vram_used(),
+        vram_total: get_vram_total(),
+        power_mode: get_power_mode(),
+        charger_status: get_charger_status(),
+        runtime_pm: get_runtime_pm(),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -144,6 +169,19 @@ mod tests {
     #[test]
     fn test_get_charger_status() {
         let _status = get_charger_status();
-        // Just verify it doesn't crash
+    }
+
+    #[test]
+    fn test_get_runtime_pm() {
+        let pm = get_runtime_pm();
+        assert!(pm == "on" || pm == "auto" || pm == "unknown");
+    }
+
+    #[test]
+    fn test_get_all_stats() {
+        let stats = get_all_stats();
+        assert!(stats.temperature < 150);
+        assert!(stats.gpu_clock < 5000);
+        assert!(stats.gpu_busy <= 100);
     }
 }
