@@ -83,6 +83,29 @@ pub fn get_vram_total() -> u64 {
         .unwrap_or(0)
 }
 
+/// Read power mode from sysfs
+#[tauri::command]
+pub fn get_power_mode() -> String {
+    let path = "/sys/class/drm/card1/device/power_dpm_force_performance_level";
+    fs::read_to_string(path)
+        .ok()
+        .map(|s| s.trim().to_string())
+        .unwrap_or_else(|| "unknown".to_string())
+}
+
+/// Read charger status from sysfs
+#[tauri::command]
+pub fn get_charger_status() -> bool {
+    let path = "/sys/class/power_supply/AC/online";
+    let fallback = "/sys/class/power_supply/ACAD/online";
+    
+    fs::read_to_string(path)
+        .or_else(|_| fs::read_to_string(fallback))
+        .ok()
+        .and_then(|s| s.trim().parse().ok())
+        .unwrap_or(false)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -110,5 +133,17 @@ mod tests {
         let used = get_vram_used();
         let total = get_vram_total();
         assert!(used <= total || total == 0);
+    }
+
+    #[test]
+    fn test_get_power_mode() {
+        let mode = get_power_mode();
+        assert!(mode == "high" || mode == "auto" || mode == "manual" || mode == "unknown");
+    }
+
+    #[test]
+    fn test_get_charger_status() {
+        let _status = get_charger_status();
+        // Just verify it doesn't crash
     }
 }
