@@ -131,6 +131,44 @@ pub fn get_all_stats() -> GpuStats {
     }
 }
 
+/// Set power mode (high or auto)
+#[tauri::command]
+pub fn set_power_mode(mode: String) -> Result<(), String> {
+    if mode != "high" && mode != "auto" {
+        return Err("Invalid mode. Use 'high' or 'auto'".to_string());
+    }
+    
+    let path = "/sys/class/drm/card1/device/power_dpm_force_performance_level";
+    fs::write(path, &mode).map_err(|e| format!("Failed to write power mode: {}", e))
+}
+
+/// Set runtime PM (on or auto)
+#[tauri::command]
+pub fn set_runtime_pm(mode: String) -> Result<(), String> {
+    if mode != "on" && mode != "auto" {
+        return Err("Invalid mode. Use 'on' or 'auto'".to_string());
+    }
+    
+    let path = "/sys/bus/pci/devices/0000:63:00.0/power/control";
+    fs::write(path, &mode).map_err(|e| format!("Failed to write runtime PM: {}", e))
+}
+
+/// Start AI session (high power + runtime PM on)
+#[tauri::command]
+pub fn start_ai_session() -> Result<(), String> {
+    set_power_mode("high".to_string())?;
+    set_runtime_pm("on".to_string())?;
+    Ok(())
+}
+
+/// End AI session (auto power + runtime PM auto)
+#[tauri::command]
+pub fn end_ai_session() -> Result<(), String> {
+    set_power_mode("auto".to_string())?;
+    set_runtime_pm("auto".to_string())?;
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -183,5 +221,19 @@ mod tests {
         assert!(stats.temperature < 150);
         assert!(stats.gpu_clock < 5000);
         assert!(stats.gpu_busy <= 100);
+    }
+
+    #[test]
+    fn test_set_power_mode_validation() {
+        // Test invalid mode
+        let result = set_power_mode("invalid".to_string());
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_set_runtime_pm_validation() {
+        // Test invalid mode
+        let result = set_runtime_pm("invalid".to_string());
+        assert!(result.is_err());
     }
 }
