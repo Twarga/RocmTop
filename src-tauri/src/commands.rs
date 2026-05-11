@@ -53,20 +53,62 @@ pub fn get_gpu_clock() -> u32 {
     0
 }
 
+/// Read GPU busy percent from sysfs
+#[tauri::command]
+pub fn get_gpu_busy() -> u32 {
+    let path = "/sys/class/drm/card1/device/gpu_busy_percent";
+    fs::read_to_string(path)
+        .ok()
+        .and_then(|s| s.trim().parse().ok())
+        .unwrap_or(0)
+}
+
+/// Read VRAM used (bytes)
+#[tauri::command]
+pub fn get_vram_used() -> u64 {
+    let path = "/sys/class/drm/card1/device/mem_info_vram_used";
+    fs::read_to_string(path)
+        .ok()
+        .and_then(|s| s.trim().parse().ok())
+        .unwrap_or(0)
+}
+
+/// Read VRAM total (bytes)
+#[tauri::command]
+pub fn get_vram_total() -> u64 {
+    let path = "/sys/class/drm/card1/device/mem_info_vram_total";
+    fs::read_to_string(path)
+        .ok()
+        .and_then(|s| s.trim().parse().ok())
+        .unwrap_or(0)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn test_get_temperature() {
-        // Should return 0 if no hwmon found (graceful failure)
         let temp = get_temperature();
-        assert!(temp < 150); // Reasonable temp range
+        assert!(temp < 150);
     }
 
     #[test]
     fn test_get_gpu_clock() {
         let clock = get_gpu_clock();
-        assert!(clock < 5000); // Reasonable clock range
+        assert!(clock < 5000);
+    }
+
+    #[test]
+    fn test_get_gpu_busy() {
+        let busy = get_gpu_busy();
+        assert!(busy <= 100);
+    }
+
+    #[test]
+    fn test_get_vram() {
+        let used = get_vram_used();
+        let total = get_vram_total();
+        assert!(used <= total || total == 0);
     }
 }
