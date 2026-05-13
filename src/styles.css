@@ -323,3 +323,30 @@ body {
   height: 28px;
   margin-top: 4px;
 }
+
+
+/* ------------------------------------------------------------------
+   Skeleton loader
+   ------------------------------------------------------------------ */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-tertiary) 0%,
+    #48484f 50%,
+    var(--bg-tertiary) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1400ms ease-in-out infinite;
+  display: block;
+  flex-shrink: 0;
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}

@@ -6,6 +6,7 @@ import { useGpuHistory } from './hooks/useGpuHistory'
 import { Toast } from './components/Toast'
 import { AnimatedNumber } from './components/AnimatedNumber'
 import { Sparkline } from './components/Sparkline'
+import { AppSkeleton } from './components/AppSkeleton'
 
 function App() {
   const [stats, setStats] = useState<GpuStats | null>(null)
@@ -98,10 +99,10 @@ function App() {
 
   if (!stats) {
     return (
-      <div className="app">
-        Loading...
+      <>
+        <AppSkeleton />
         <Toast toast={toast} onDismiss={dismiss} />
-      </div>
+      </>
     )
   }
 
