@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RocmTop — A lightweight AMD GPU monitor for Linux</title>
+  <meta
+    name="description"
+    content="Real-time AMD GPU monitoring with one-click power-mode switching in a tray-resident Linux mini app. Built with Tauri v2 and React."
+  />
+  <meta name="theme-color" content="#0d0d10" />
+
+  <!-- Open Graph / social share -->
+  <meta property="og:title" content="RocmTop — lightweight AMD GPU monitor for Linux" />
+  <meta
+    property="og:description"
+    content="Temperature, clock, load, VRAM, and one-click power-mode switching in a tiny tray-resident Linux app."
+  />
+  <meta property="og:image" content="icon-512.png" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" href="icon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header class="nav">
+    <a class="nav-brand" href="#top">
+      <img src="icon.svg" width="32" height="32" alt="" />
+      <span>RocmTop</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#install">Install</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://github.com/Twarga/RocmTop" target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ───────── Hero ───────── -->
+    <section class="hero" id="top">
+      <div class="hero-glow" aria-hidden></div>
+      <img class="hero-logo" src="icon.svg" width="128" height="128" alt="RocmTop logo" />
+      <h1 class="hero-title">
+        A <span class="accent">lightweight</span> AMD GPU monitor<br />
+        for Linux.
+      </h1>
+      <p class="hero-sub">
+        Real-time temperature, clock, load, and VRAM — plus one-click power-mode
+        switching — in a tray-resident mini app. <br />
+        <strong>420&nbsp;×&nbsp;640&nbsp;px</strong>, ~8&nbsp;MB, written in Rust.
+      </p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="https://github.com/Twarga/RocmTop/releases/latest">
+          Download AppImage
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/Twarga/RocmTop">
+          View on GitHub
+        </a>
+      </div>
+      <div class="hero-badges">
+        <img alt="CI" src="https://github.com/Twarga/RocmTop/actions/workflows/ci.yml/badge.svg" />
+        <img alt="License" src="https://img.shields.io/github/license/Twarga/RocmTop" />
+        <img alt="Latest release" src="https://img.shields.io/github/v/release/Twarga/RocmTop?sort=semver" />
+        <img alt="Downloads" src="https://img.shields.io/github/downloads/Twarga/RocmTop/total" />
+      </div>
+
+      <!-- Replace this placeholder with a real screenshot/GIF once captured -->
+      <div class="hero-screenshot" aria-label="RocmTop screenshot placeholder">
+        <div class="ss-chrome">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="ss-body">
+          <div class="ss-header">
+            <strong>RocmTop</strong>
+            <span class="ss-chip">Refresh</span>
+          </div>
+          <div class="ss-grid">
+            <div class="ss-card">
+              <div class="ss-label">TEMPERATURE</div>
+              <div class="ss-value ss-green">54<span>°C</span></div>
+              <div class="ss-bar"><div style="width: 54%; background: var(--green)"></div></div>
+            </div>
+            <div class="ss-card">
+              <div class="ss-label">GPU CLOCK</div>
+              <div class="ss-value">1850<span>MHz</span></div>
+              <div class="ss-bar"><div style="width: 64%; background: var(--blue)"></div></div>
+            </div>
+            <div class="ss-card">
+              <div class="ss-label">GPU LOAD</div>
+              <div class="ss-value">72<span>%</span></div>
+              <div class="ss-bar"><div style="width: 72%; background: var(--blue)"></div></div>
+            </div>
+            <div class="ss-card">
+              <div class="ss-label">VRAM</div>
+              <div class="ss-value">2048<span> / 8192 MB</span></div>
+              <div class="ss-bar"><div style="width: 25%; background: var(--blue)"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────── Features ───────── -->
+    <section class="features" id="features">
+      <h2>Built for getting out of your way</h2>
+      <div class="feature-grid">
+        <div class="feature">
+          <div class="feature-icon">📊</div>
+          <h3>Live sysfs metrics</h3>
+          <p>Temperature, clock, busy %, VRAM used/total. Polled every 2&nbsp;s straight from <code>/sys/class/drm</code>.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📈</div>
+          <h3>60-second sparklines</h3>
+          <p>Every metric has a rolling 60-second mini-chart so you can spot spikes at a glance.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">⚡</div>
+          <h3>One-click power mode</h3>
+          <p>Toggle HIGH (pinned max DPM) vs AUTO (driver-scaled) without opening a terminal.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🤖</div>
+          <h3>AI Session preset</h3>
+          <p>Flip HIGH&nbsp;+&nbsp;PM&nbsp;ON together before a ROCm workload, restore with one click when done.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔍</div>
+          <h3>Zero-config detection</h3>
+          <p>Auto-discovers your AMD card by scanning <code>/sys/class/drm/cardN/device/vendor</code>. No config file.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔐</div>
+          <h3>Polkit-aware</h3>
+          <p>If a sysfs write requires root, the app transparently prompts through <code>pkexec</code>.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🖥️</div>
+          <h3>System tray</h3>
+          <p>Close the window and it hides to the tray. Left-click to toggle, right-click for a menu.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🎨</div>
+          <h3>Desktop-app feel</h3>
+          <p>Smooth animated values, hover tooltips, skeleton loader, toast confirmations. No flash of "Loading".</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────── Install ───────── -->
+    <section class="install" id="install">
+      <h2>Install in 30 seconds</h2>
+      <p class="install-sub">
+        Download the AppImage and mark it executable. That's it — no daemon, no
+        elevated installer.
+      </p>
+      <pre class="install-code"><code># 1. Grab the latest AppImage from the Releases page
+wget https://github.com/Twarga/RocmTop/releases/latest/download/RocmTop_1.0.0_amd64.AppImage
+
+# 2. Make it executable and run
+chmod +x RocmTop_*.AppImage
+./RocmTop_*.AppImage</code></pre>
+
+      <h3 class="install-deps-h">First-time system dependencies</h3>
+      <div class="install-distros">
+        <div class="distro">
+          <h4>Arch / CachyOS / Manjaro</h4>
+          <pre><code>sudo pacman -S webkit2gtk-4.1 \
+  libayatana-appindicator polkit</code></pre>
+        </div>
+        <div class="distro">
+          <h4>Ubuntu / Debian / Pop!_OS</h4>
+          <pre><code>sudo apt install libwebkit2gtk-4.1-0 \
+  libayatana-appindicator3-1 policykit-1</code></pre>
+        </div>
+        <div class="distro">
+          <h4>Fedora / Nobara</h4>
+          <pre><code>sudo dnf install webkit2gtk4.1 \
+  libayatana-appindicator-gtk3 polkit</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────── FAQ ───────── -->
+    <section class="faq" id="faq">
+      <h2>Frequently asked</h2>
+
+      <details>
+        <summary>Does this work with NVIDIA GPUs?</summary>
+        <p>
+          No. RocmTop specifically reads <code>amdgpu</code> sysfs nodes
+          (<code>pp_dpm_sclk</code>, <code>gpu_busy_percent</code>, etc.) that
+          NVIDIA's proprietary driver doesn't expose. Use <code>nvtop</code>
+          or <code>nvidia-smi</code> for NVIDIA hardware.
+        </p>
+      </details>
+
+      <details>
+        <summary>Why does it need root to flip toggles?</summary>
+        <p>
+          The <code>power_dpm_force_performance_level</code> and PCI
+          <code>power/control</code> sysfs nodes are owned by root. RocmTop
+          first tries a direct write; if that fails with permission denied,
+          it prompts through <code>pkexec</code>. No elevated daemon runs in
+          the background.
+        </p>
+      </details>
+
+      <details>
+        <summary>Is it safe to pin the GPU to HIGH for long periods?</summary>
+        <p>
+          That's how the driver was designed to be used — HIGH forces the
+          highest DPM state, which can save latency for ML/3D workloads at
+          the cost of higher idle power. Temperature protection still works,
+          so the GPU will throttle if it overheats. Switch back to AUTO
+          when you're done.
+        </p>
+      </details>
+
+      <details>
+        <summary>Does it support multiple AMD GPUs?</summary>
+        <p>
+          Not yet — v1.0 uses the first AMD card it finds. Multi-GPU support
+          is on the <a href="https://github.com/Twarga/RocmTop#roadmap">roadmap</a>.
+          Open an issue if you need it and can test.
+        </p>
+      </details>
+
+      <details>
+        <summary>The tray icon doesn't appear on GNOME.</summary>
+        <p>
+          GNOME removed the tray API in 2017. Install the
+          <a href="https://extensions.gnome.org/extension/615/appindicator-support/"
+             target="_blank" rel="noopener">AppIndicator extension</a> to
+          restore it. KDE, XFCE, LXQt, and wlroots compositors work out of
+          the box.
+        </p>
+      </details>
+
+      <details>
+        <summary>What does it weigh on my system?</summary>
+        <p>
+          The AppImage is around 8&nbsp;MB. At runtime the Rust process uses
+          roughly 30&nbsp;MB of RAM (dominated by the WebKit view) and well
+          under 1 % of one CPU core while polling at 2&nbsp;s intervals.
+        </p>
+      </details>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>
+      <a href="https://github.com/Twarga/RocmTop">Source code</a> · 
+      <a href="https://github.com/Twarga/RocmTop/blob/main/LICENSE">MIT License</a> · 
+      <a href="https://github.com/Twarga/RocmTop/blob/main/CHANGELOG.md">Changelog</a> · 
+      <a href="https://github.com/Twarga/RocmTop/issues">Report a bug</a>
+    </p>
+    <p class="footer-small">
+      Built with <a href="https://tauri.app" target="_blank" rel="noopener">Tauri</a>
+      and a sensible amount of React. © 2026 Twarga.
+    </p>
+  </footer>
+
+</body>
+</html>
