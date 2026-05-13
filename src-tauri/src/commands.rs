@@ -288,14 +288,8 @@ pub fn get_all_stats() -> GpuStats {
 fn write_sysfs_privileged(path: &Path, content: &str) -> Result<(), String> {
     match fs::write(path, content) {
         Ok(()) => Ok(()),
-        Err(e) if e.kind() == io::ErrorKind::PermissionDenied => {
-            pkexec_write(path, content)
-        }
-        Err(e) => Err(format!(
-            "Failed to write {}: {}",
-            path.display(),
-            e
-        )),
+        Err(e) if e.kind() == io::ErrorKind::PermissionDenied => pkexec_write(path, content),
+        Err(e) => Err(format!("Failed to write {}: {}", path.display(), e)),
     }
 }
 
@@ -353,10 +347,7 @@ fn pkexec_write(path: &Path, content: &str) -> Result<(), String> {
             127 => " (pkexec could not be executed)",
             _ => "",
         };
-        return Err(format!(
-            "pkexec exited with status {}{}",
-            code, hint
-        ));
+        return Err(format!("pkexec exited with status {}{}", code, hint));
     }
 
     Ok(())

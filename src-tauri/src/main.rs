@@ -11,13 +11,8 @@ fn main() {
         .plugin(tauri_plugin_shell::init())
         .setup(|app| {
             // --- Tray menu --------------------------------------------------
-            let show_hide = MenuItem::with_id(
-                app,
-                "toggle",
-                "Show / Hide RocmTop",
-                true,
-                None::<&str>,
-            )?;
+            let show_hide =
+                MenuItem::with_id(app, "toggle", "Show / Hide RocmTop", true, None::<&str>)?;
             let separator = PredefinedMenuItem::separator(app)?;
             let quit = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&show_hide, &separator, &quit])?;
