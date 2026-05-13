@@ -3,6 +3,7 @@ import { invoke } from '@tauri-apps/api/core'
 import { GpuStats } from './types/gpu'
 import { useToast } from './hooks/useToast'
 import { Toast } from './components/Toast'
+import { AnimatedNumber } from './components/AnimatedNumber'
 
 function App() {
   const [stats, setStats] = useState<GpuStats | null>(null)
@@ -108,7 +109,7 @@ function App() {
         <div className="metric-card">
           <h3>Temperature</h3>
           <div className={`metric-value ${getTempColor(stats.temperature)}`}>
-            {stats.temperature}<span className="metric-unit">°C</span>
+            <AnimatedNumber value={stats.temperature} /><span className="metric-unit">°C</span>
           </div>
           <div className="progress-bar">
             <div 
@@ -121,7 +122,7 @@ function App() {
         <div className="metric-card">
           <h3>GPU Clock</h3>
           <div className="metric-value">
-            {stats.gpu_clock}<span className="metric-unit">MHz</span>
+            <AnimatedNumber value={stats.gpu_clock} /><span className="metric-unit">MHz</span>
           </div>
           <div className="progress-bar">
             <div 
@@ -134,7 +135,7 @@ function App() {
         <div className="metric-card">
           <h3>GPU Load</h3>
           <div className="metric-value">
-            {stats.gpu_busy}<span className="metric-unit">%</span>
+            <AnimatedNumber value={stats.gpu_busy} /><span className="metric-unit">%</span>
           </div>
           <div className="progress-bar">
             <div 
@@ -147,7 +148,7 @@ function App() {
         <div className="metric-card">
           <h3>VRAM</h3>
           <div className="metric-value">
-            {vramUsedMb}<span className="metric-unit"> / {vramTotalMb} MB</span>
+            <AnimatedNumber value={vramUsedMb} /><span className="metric-unit"> / {vramTotalMb} MB</span>
           </div>
           <div className="progress-bar">
             <div 
