@@ -23,6 +23,24 @@ chmod +x RocmTop-x86_64.AppImage
 
 - Linux with AMD GPU (tested on Radeon 880M)
 - WebKitGTK (pre-installed on most distros)
+- libayatana-appindicator3 (for system tray support)
+
+### Install Dependencies
+
+**CachyOS/Arch:**
+```bash
+sudo pacman -S webkit2gtk-4.1 libayatana-appindicator
+```
+
+**Ubuntu/Debian:**
+```bash
+sudo apt install webkit2gtk-4.1 libayatana-appindicator3-1
+```
+
+**Fedora:**
+```bash
+sudo dnf install webkit2gtk4.1 libayatana-appindicator-gtk3
+```
 
 ## Build from Source
 
