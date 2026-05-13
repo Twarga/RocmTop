@@ -7,6 +7,7 @@ import { Toast } from './components/Toast'
 import { AnimatedNumber } from './components/AnimatedNumber'
 import { Sparkline } from './components/Sparkline'
 import { AppSkeleton } from './components/AppSkeleton'
+import { Tooltip } from './components/Tooltip'
 
 function App() {
   const [stats, setStats] = useState<GpuStats | null>(null)
@@ -175,7 +176,9 @@ function App() {
 
       <div className="status-section">
         <div className="status-row">
-          <span className="status-label">Power Mode</span>
+          <Tooltip label="HIGH pins the GPU to its max DPM state. AUTO lets the driver scale based on load.">
+            <span className="status-label">Power Mode</span>
+          </Tooltip>
           <div className="toggle-group">
             <button 
               className={`toggle-btn ${stats.power_mode === 'high' ? 'active' : ''}`}
@@ -193,7 +196,9 @@ function App() {
         </div>
 
         <div className="status-row">
-          <span className="status-label">Runtime PM</span>
+          <Tooltip label="ON keeps the PCI device powered (lower latency, higher idle draw). AUTO saves power when idle.">
+            <span className="status-label">Runtime PM</span>
+          </Tooltip>
           <div className="toggle-group">
             <button 
               className={`toggle-btn ${stats.runtime_pm === 'on' ? 'active' : ''}`}
@@ -221,12 +226,16 @@ function App() {
       <div className="ai-section">
         <h3>AI Session</h3>
         <div className="ai-buttons">
-          <button className="ai-btn start" onClick={startAiSession}>
-            Start AI Session
-          </button>
-          <button className="ai-btn end" onClick={endAiSession}>
-            End AI Session
-          </button>
+          <Tooltip label="Force HIGH power mode and keep PCI on. Use before launching ML/inference workloads.">
+            <button className="ai-btn start" onClick={startAiSession}>
+              Start AI Session
+            </button>
+          </Tooltip>
+          <Tooltip label="Restore AUTO power mode and runtime PM.">
+            <button className="ai-btn end" onClick={endAiSession}>
+              End AI Session
+            </button>
+          </Tooltip>
         </div>
       </div>
 
