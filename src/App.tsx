@@ -2,13 +2,16 @@ import { useState, useEffect } from 'react'
 import { invoke } from '@tauri-apps/api/core'
 import { GpuStats } from './types/gpu'
 import { useToast } from './hooks/useToast'
+import { useGpuHistory } from './hooks/useGpuHistory'
 import { Toast } from './components/Toast'
 import { AnimatedNumber } from './components/AnimatedNumber'
+import { Sparkline } from './components/Sparkline'
 
 function App() {
   const [stats, setStats] = useState<GpuStats | null>(null)
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date())
   const { toast, show, dismiss } = useToast()
+  const history = useGpuHistory(stats)
 
   useEffect(() => {
     let cancelled = false
@@ -37,6 +40,12 @@ function App() {
     if (temp < 80) return 'temp-normal'
     if (temp <= 88) return 'temp-warm'
     return 'temp-hot'
+  }
+
+  const tempSparklineColor = (temp: number) => {
+    if (temp < 80) return 'var(--accent-green)'
+    if (temp <= 88) return 'var(--accent-yellow)'
+    return 'var(--accent-red)'
   }
 
   const getProgressColor = (temp: number) => {
@@ -117,6 +126,7 @@ function App() {
               style={{ width: `${Math.min((stats.temperature / 100) * 100, 100)}%` }}
             />
           </div>
+          <Sparkline values={history.temperature} max={100} color={tempSparklineColor(stats.temperature)} />
         </div>
 
         <div className="metric-card">
@@ -130,6 +140,7 @@ function App() {
               style={{ width: `${stats.max_clock > 0 ? Math.min((stats.gpu_clock / stats.max_clock) * 100, 100) : 0}%` }}
             />
           </div>
+          <Sparkline values={history.gpuClock} max={stats.max_clock} color="var(--accent-blue)" />
         </div>
 
         <div className="metric-card">
@@ -143,6 +154,7 @@ function App() {
               style={{ width: `${stats.gpu_busy}%` }}
             />
           </div>
+          <Sparkline values={history.gpuBusy} max={100} color="var(--accent-blue)" />
         </div>
 
         <div className="metric-card">
@@ -156,6 +168,7 @@ function App() {
               style={{ width: `${vramPercent}%` }}
             />
           </div>
+          <Sparkline values={history.vramUsedMb} max={vramTotalMb} color="var(--accent-blue)" />
         </div>
       </div>
 
