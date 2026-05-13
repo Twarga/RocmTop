@@ -7,6 +7,7 @@ export interface GpuStats {
   power_mode: string;
   charger_status: boolean;
   runtime_pm: string;
+  max_clock: number;
 }
 
 export type PowerMode = 'high' | 'auto';

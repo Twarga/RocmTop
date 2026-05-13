@@ -104,7 +104,7 @@ function App() {
           <div className="progress-bar">
             <div 
               className="progress-fill progress-blue"
-              style={{ width: `${(stats.gpu_clock / 2900) * 100}%` }}
+              style={{ width: `${stats.max_clock > 0 ? Math.min((stats.gpu_clock / stats.max_clock) * 100, 100) : 0}%` }}
             />
           </div>
         </div>

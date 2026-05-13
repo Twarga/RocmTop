@@ -12,6 +12,7 @@ fn main() {
             rocm_top::get_power_mode,
             rocm_top::get_charger_status,
             rocm_top::get_runtime_pm,
+            rocm_top::get_max_clock,
             rocm_top::get_all_stats,
             rocm_top::set_power_mode,
             rocm_top::set_runtime_pm,
