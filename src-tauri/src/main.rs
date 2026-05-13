@@ -7,6 +7,23 @@ use tauri::{
 };
 
 fn main() {
+    // WebKitGTK 2.48+ with the DMA-BUF renderer blanks / flickers the window
+    // on many AMD and NVIDIA setups (Arch, CachyOS, Fedora 40+, Nobara).
+    // Forcing the legacy compositor path is the upstream-recommended
+    // workaround until Mesa + WebKit ship a fix together.
+    // See: https://bugs.webkit.org/show_bug.cgi?id=278453
+    //
+    // These must be set before the webview is created, so do it first thing.
+    #[cfg(target_os = "linux")]
+    {
+        if std::env::var_os("WEBKIT_DISABLE_DMABUF_RENDERER").is_none() {
+            std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
+        }
+        if std::env::var_os("WEBKIT_DISABLE_COMPOSITING_MODE").is_none() {
+            std::env::set_var("WEBKIT_DISABLE_COMPOSITING_MODE", "1");
+        }
+    }
+
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .setup(|app| {

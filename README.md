@@ -179,6 +179,16 @@ grep -i amdgpu` to confirm the driver loaded.
 **Window opens but everything is blank.**
 WebKitGTK is missing or corrupted. Reinstall `webkit2gtk-4.1` and relaunch.
 
+**Window flickers or stays white on Arch / CachyOS / Fedora 40+.**
+This is a WebKitGTK 2.48+ DMA-BUF renderer bug. RocmTop v1.0.1+ works
+around it automatically by setting `WEBKIT_DISABLE_DMABUF_RENDERER=1`
+before launching the webview. If you're still seeing it, you can also
+try forcing X11:
+
+```bash
+GDK_BACKEND=x11 ./RocmTop_*.AppImage
+```
+
 ## Roadmap
 
 - [ ] Settings panel (polling interval, launch at startup, theme)

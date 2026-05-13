@@ -6,6 +6,15 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-05-13
+
+### Fixed
+- Flickering / blank white window on Arch, CachyOS, Fedora 40+, Nobara,
+  and other distros shipping WebKitGTK 2.48+. The app now sets
+  `WEBKIT_DISABLE_DMABUF_RENDERER=1` and `WEBKIT_DISABLE_COMPOSITING_MODE=1`
+  before creating the webview, so users no longer need to set these env
+  vars manually. Existing user values (if set) are respected.
+
 ## [1.0.0] - 2026-05-13
 
 First public release.
@@ -41,5 +50,6 @@ First public release.
 - `libayatana-appindicator3` (for the system tray).
 - `polkit` (recommended, for privileged sysfs writes).
 
-[Unreleased]: https://github.com/Twarga/RocmTop/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/Twarga/RocmTop/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/Twarga/RocmTop/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/Twarga/RocmTop/releases/tag/v1.0.0

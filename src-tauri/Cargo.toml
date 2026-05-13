@@ -1,6 +1,6 @@
 [package]
 name = "rocm-top"
-version = "1.0.0"
+version = "1.0.1"
 description = "Lightweight AMD GPU Monitor for Linux"
 authors = ["Twarga"]
 edition = "2021"

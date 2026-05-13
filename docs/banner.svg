@@ -1,0 +1,226 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 400" width="1600" height="400" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <!-- Background gradient -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#17171c"/>
+      <stop offset="1" stop-color="#0a0a0d"/>
+    </linearGradient>
+
+    <!-- Red radial glow for depth -->
+    <radialGradient id="glow" cx="0.78" cy="0.5" r="0.55">
+      <stop offset="0" stop-color="#ed1c24" stop-opacity="0.28"/>
+      <stop offset="0.45" stop-color="#ed1c24" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#ed1c24" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Wordmark accent gradient -->
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff4d4d"/>
+      <stop offset="0.5" stop-color="#ed1c24"/>
+      <stop offset="1" stop-color="#b81219"/>
+    </linearGradient>
+
+    <!-- Subtle dotted grid pattern -->
+    <pattern id="grid" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#2a2a32"/>
+    </pattern>
+
+    <!-- Chip icon sub-gradient matching app logo -->
+    <linearGradient id="chipAccent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff4d4d"/>
+      <stop offset="0.5" stop-color="#ed1c24"/>
+      <stop offset="1" stop-color="#b81219"/>
+    </linearGradient>
+
+    <filter id="chipGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Base layers -->
+  <rect width="1600" height="400" fill="url(#bg)"/>
+  <rect width="1600" height="400" fill="url(#grid)" opacity="0.25"/>
+  <rect width="1600" height="400" fill="url(#glow)"/>
+
+  <!-- Decorative sparkline waveform across the bottom -->
+  <g opacity="0.18" fill="none" stroke="url(#accent)" stroke-width="2.5"
+     stroke-linejoin="round" stroke-linecap="round">
+    <polyline points="
+      0,300
+      60,298 120,302 180,290 240,305 300,288 360,296
+      420,270 480,274 540,260 600,265 660,245 720,250
+      780,230 840,235 900,215 960,218 1020,200 1080,206
+      1140,188 1200,194 1260,175 1320,182 1380,168 1440,172
+      1500,155 1560,162 1600,150
+    "/>
+  </g>
+
+  <!-- Second, fainter, ghost sparkline higher up -->
+  <g opacity="0.08" fill="none" stroke="#6ee7a0" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+    <polyline points="
+      0,120
+      80,126 160,118 240,132 320,124 400,136 480,128
+      560,140 640,134 720,146 800,140 880,152 960,148
+      1040,158 1120,150 1200,164 1280,158 1360,168 1440,162
+      1520,172 1600,166
+    "/>
+  </g>
+
+  <!-- Left: Chip icon -->
+  <g transform="translate(140, 128) scale(0.14)">
+    <!-- Rounded container -->
+    <rect x="0" y="0" width="1024" height="1024" rx="220" ry="220" fill="#1e1e22"/>
+    <rect x="16" y="16" width="992" height="992" rx="204" ry="204" fill="none"
+          stroke="#2a2a30" stroke-width="2"/>
+
+    <!-- GPU chip body -->
+    <rect x="232" y="232" width="560" height="560" rx="72" ry="72"
+          fill="#252530" stroke="#3a3a45" stroke-width="6"/>
+
+    <!-- Pins top -->
+    <g fill="#3a3a45">
+      <rect x="316" y="200" width="40" height="36" rx="4"/>
+      <rect x="396" y="200" width="40" height="36" rx="4"/>
+      <rect x="476" y="200" width="40" height="36" rx="4"/>
+      <rect x="556" y="200" width="40" height="36" rx="4"/>
+      <rect x="636" y="200" width="40" height="36" rx="4"/>
+    </g>
+    <!-- Pins bottom -->
+    <g fill="#3a3a45">
+      <rect x="316" y="788" width="40" height="36" rx="4"/>
+      <rect x="396" y="788" width="40" height="36" rx="4"/>
+      <rect x="476" y="788" width="40" height="36" rx="4"/>
+      <rect x="556" y="788" width="40" height="36" rx="4"/>
+      <rect x="636" y="788" width="40" height="36" rx="4"/>
+    </g>
+    <!-- Pins left -->
+    <g fill="#3a3a45">
+      <rect x="200" y="316" width="36" height="40" rx="4"/>
+      <rect x="200" y="396" width="36" height="40" rx="4"/>
+      <rect x="200" y="476" width="36" height="40" rx="4"/>
+      <rect x="200" y="556" width="36" height="40" rx="4"/>
+      <rect x="200" y="636" width="36" height="40" rx="4"/>
+    </g>
+    <!-- Pins right -->
+    <g fill="#3a3a45">
+      <rect x="788" y="316" width="36" height="40" rx="4"/>
+      <rect x="788" y="396" width="36" height="40" rx="4"/>
+      <rect x="788" y="476" width="36" height="40" rx="4"/>
+      <rect x="788" y="556" width="36" height="40" rx="4"/>
+      <rect x="788" y="636" width="36" height="40" rx="4"/>
+    </g>
+
+    <!-- Inner die -->
+    <rect x="320" y="320" width="384" height="384" rx="32" ry="32"
+          fill="#15151a" stroke="#2a2a30" stroke-width="4"/>
+
+    <!-- Pulse line -->
+    <polyline
+      points="320,512 400,512 430,512 460,412 490,612 520,472 550,552 580,512 640,512 704,512"
+      fill="none"
+      stroke="url(#chipAccent)"
+      stroke-width="28"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      filter="url(#chipGlow)"/>
+
+    <!-- Power LED -->
+    <circle cx="672" cy="352" r="12" fill="#ed1c24" filter="url(#chipGlow)"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g font-family="'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif"
+     text-anchor="start">
+    <text x="320" y="195" font-size="120" font-weight="800"
+          letter-spacing="-4" fill="#ebebee">
+      <tspan fill="url(#accent)">Rocm</tspan><tspan fill="#ebebee">Top</tspan>
+    </text>
+
+    <!-- Tagline -->
+    <text x="322" y="250" font-size="26" font-weight="500" fill="#c9c9ce"
+          letter-spacing="0.1">
+      A lightweight AMD GPU monitor for Linux.
+    </text>
+
+    <!-- Secondary tagline -->
+    <text x="322" y="290" font-size="18" font-weight="400" fill="#8f8f98">
+      Real-time temperature · clock · load · VRAM — one-click power mode.
+    </text>
+
+    <!-- Feature chips row -->
+    <g font-size="14" font-weight="600" fill="#c9c9ce">
+      <g transform="translate(322, 322)">
+        <rect width="108" height="30" rx="15" fill="#1f1f26" stroke="#2a2a30"/>
+        <text x="54" y="20" text-anchor="middle">⚡ One-click HIGH</text>
+      </g>
+      <g transform="translate(440, 322)">
+        <rect width="116" height="30" rx="15" fill="#1f1f26" stroke="#2a2a30"/>
+        <text x="58" y="20" text-anchor="middle">📈 60s sparklines</text>
+      </g>
+      <g transform="translate(566, 322)">
+        <rect width="104" height="30" rx="15" fill="#1f1f26" stroke="#2a2a30"/>
+        <text x="52" y="20" text-anchor="middle">🔐 Polkit-aware</text>
+      </g>
+      <g transform="translate(680, 322)">
+        <rect width="104" height="30" rx="15" fill="#1f1f26" stroke="#2a2a30"/>
+        <text x="52" y="20" text-anchor="middle">🖥 Tray-resident</text>
+      </g>
+      <g transform="translate(794, 322)">
+        <rect width="96" height="30" rx="15" fill="#1f1f26" stroke="#2a2a30"/>
+        <text x="48" y="20" text-anchor="middle">⚙ ~8 MB AppImage</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Right-side floating metric card mock (like the app) -->
+  <g transform="translate(1170, 92)">
+    <!-- Card 1: temp -->
+    <g>
+      <rect width="170" height="104" rx="12" fill="#1c1c22" stroke="#26262e"/>
+      <text x="16" y="30" font-family="Inter, sans-serif" font-size="11"
+            font-weight="600" fill="#8f8f98" letter-spacing="0.6">TEMPERATURE</text>
+      <text x="16" y="70" font-family="Inter, sans-serif" font-size="32"
+            font-weight="800" fill="#22c55e">54<tspan font-size="16" font-weight="600"
+            fill="#22c55e">°C</tspan></text>
+      <rect x="16" y="86" width="138" height="4" rx="2" fill="#2a2a32"/>
+      <rect x="16" y="86" width="75" height="4" rx="2" fill="#22c55e"/>
+    </g>
+    <!-- Card 2: clock -->
+    <g transform="translate(186, 0)">
+      <rect width="170" height="104" rx="12" fill="#1c1c22" stroke="#26262e"/>
+      <text x="16" y="30" font-family="Inter, sans-serif" font-size="11"
+            font-weight="600" fill="#8f8f98" letter-spacing="0.6">GPU CLOCK</text>
+      <text x="16" y="70" font-family="Inter, sans-serif" font-size="32"
+            font-weight="800" fill="#ebebee">1850<tspan font-size="16"
+            font-weight="600" fill="#8f8f98">MHz</tspan></text>
+      <rect x="16" y="86" width="138" height="4" rx="2" fill="#2a2a32"/>
+      <rect x="16" y="86" width="88" height="4" rx="2" fill="#3b82f6"/>
+    </g>
+    <!-- Card 3: load -->
+    <g transform="translate(0, 120)">
+      <rect width="170" height="104" rx="12" fill="#1c1c22" stroke="#26262e"/>
+      <text x="16" y="30" font-family="Inter, sans-serif" font-size="11"
+            font-weight="600" fill="#8f8f98" letter-spacing="0.6">GPU LOAD</text>
+      <text x="16" y="70" font-family="Inter, sans-serif" font-size="32"
+            font-weight="800" fill="#ebebee">72<tspan font-size="16"
+            font-weight="600" fill="#8f8f98">%</tspan></text>
+      <rect x="16" y="86" width="138" height="4" rx="2" fill="#2a2a32"/>
+      <rect x="16" y="86" width="99" height="4" rx="2" fill="#3b82f6"/>
+    </g>
+    <!-- Card 4: vram -->
+    <g transform="translate(186, 120)">
+      <rect width="170" height="104" rx="12" fill="#1c1c22" stroke="#26262e"/>
+      <text x="16" y="30" font-family="Inter, sans-serif" font-size="11"
+            font-weight="600" fill="#8f8f98" letter-spacing="0.6">VRAM</text>
+      <text x="16" y="70" font-family="Inter, sans-serif" font-size="22"
+            font-weight="800" fill="#ebebee">2048<tspan font-size="14"
+            font-weight="600" fill="#8f8f98"> / 8192 MB</tspan></text>
+      <rect x="16" y="86" width="138" height="4" rx="2" fill="#2a2a32"/>
+      <rect x="16" y="86" width="34" height="4" rx="2" fill="#3b82f6"/>
+    </g>
+  </g>
+</svg>
