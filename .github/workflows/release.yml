@@ -1,0 +1,78 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-appimage:
+    name: Build AppImage
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            build-essential \
+            curl \
+            wget \
+            file \
+            libxdo-dev \
+            libssl-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry + target
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            src-tauri/target
+          key: ${{ runner.os }}-cargo-release-${{ hashFiles('src-tauri/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-release-
+            ${{ runner.os }}-cargo-
+
+      # tauri-action handles: frontend build, tauri build, artifact collection,
+      # GitHub Release creation (or update), and upload of AppImage + sig.
+      - name: Build Tauri app and publish release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: 'RocmTop ${{ github.ref_name }}'
+          releaseBody: |
+            See [CHANGELOG.md](https://github.com/Twarga/RocmTop/blob/${{ github.ref_name }}/CHANGELOG.md) for details.
+
+            ## Install
+
+            ```bash
+            chmod +x RocmTop_*.AppImage
+            ./RocmTop_*.AppImage
+            ```
+
+            Requires `libayatana-appindicator3` for the system tray. See the
+            [README](https://github.com/Twarga/RocmTop#requirements) for
+            per-distro install commands.
+          releaseDraft: false
+          prerelease: false
+          args: --bundles appimage
