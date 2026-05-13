@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 use std::fs;
+use std::io::{self, Write};
 use std::path::{Path, PathBuf};
+use std::process::{Command, Stdio};
 use std::sync::OnceLock;
 
 // ---------------------------------------------------------------------------
@@ -277,10 +279,95 @@ pub fn get_all_stats() -> GpuStats {
 }
 
 // ---------------------------------------------------------------------------
+// Privileged write helper
+// ---------------------------------------------------------------------------
+
+/// Write `content` to `path`. If the direct write fails with `PermissionDenied`,
+/// transparently retry through `pkexec tee`, which will trigger a desktop-level
+/// password prompt. Any other error is returned as-is.
+fn write_sysfs_privileged(path: &Path, content: &str) -> Result<(), String> {
+    match fs::write(path, content) {
+        Ok(()) => Ok(()),
+        Err(e) if e.kind() == io::ErrorKind::PermissionDenied => {
+            pkexec_write(path, content)
+        }
+        Err(e) => Err(format!(
+            "Failed to write {}: {}",
+            path.display(),
+            e
+        )),
+    }
+}
+
+/// Write through `pkexec tee <path>`. Returns a user-readable error if pkexec
+/// is not installed, not authorized, or the user cancels the prompt.
+fn pkexec_write(path: &Path, content: &str) -> Result<(), String> {
+    // Availability probe — avoids spawning a full prompt just to discover
+    // pkexec is missing.
+    if Command::new("pkexec")
+        .arg("--version")
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .status()
+        .is_err()
+    {
+        return Err(format!(
+            "Permission denied writing {}. pkexec is not available — install polkit, \
+             or run: sudo chmod a+w {}",
+            path.display(),
+            path.display()
+        ));
+    }
+
+    // Use `tee` (from coreutils, always present) to write under root.
+    // Stdout is discarded — we only care about the exit status.
+    let mut child = Command::new("pkexec")
+        .arg("tee")
+        .arg(path)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::null())
+        .stderr(Stdio::piped())
+        .spawn()
+        .map_err(|e| format!("Failed to launch pkexec: {}", e))?;
+
+    {
+        let stdin = child
+            .stdin
+            .as_mut()
+            .ok_or_else(|| "failed to open pkexec stdin".to_string())?;
+        stdin
+            .write_all(content.as_bytes())
+            .map_err(|e| format!("Failed to pipe content to pkexec: {}", e))?;
+    }
+
+    let status = child
+        .wait()
+        .map_err(|e| format!("pkexec did not complete: {}", e))?;
+
+    if !status.success() {
+        // pkexec exits 126 if authorization failed or was cancelled, 127 if
+        // pkexec itself couldn't run, otherwise the tee exit code.
+        let code = status.code().unwrap_or(-1);
+        let hint = match code {
+            126 => " (authorization denied or cancelled)",
+            127 => " (pkexec could not be executed)",
+            _ => "",
+        };
+        return Err(format!(
+            "pkexec exited with status {}{}",
+            code, hint
+        ));
+    }
+
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
 // Write commands
 // ---------------------------------------------------------------------------
 
 /// Set the GPU performance level. Valid values: `"high"` or `"auto"`.
+/// Requires root; will prompt via pkexec if the direct write is denied.
 #[tauri::command]
 pub fn set_power_mode(mode: String) -> Result<(), String> {
     if mode != "high" && mode != "auto" {
@@ -289,18 +376,11 @@ pub fn set_power_mode(mode: String) -> Result<(), String> {
     let Some(card) = card_device_path() else {
         return Err("AMD GPU not detected".into());
     };
-    let target = card.join("power_dpm_force_performance_level");
-    fs::write(&target, &mode).map_err(|e| {
-        format!(
-            "Failed to write {} (need root? run `sudo chmod a+w {}` or use pkexec): {}",
-            target.display(),
-            target.display(),
-            e
-        )
-    })
+    write_sysfs_privileged(&card.join("power_dpm_force_performance_level"), &mode)
 }
 
 /// Set PCI runtime PM. Valid values: `"on"` or `"auto"`.
+/// Requires root; will prompt via pkexec if the direct write is denied.
 #[tauri::command]
 pub fn set_runtime_pm(mode: String) -> Result<(), String> {
     if mode != "on" && mode != "auto" {
@@ -309,13 +389,7 @@ pub fn set_runtime_pm(mode: String) -> Result<(), String> {
     let Some(target) = pci_power_control_path() else {
         return Err("PCI power control path not detected".into());
     };
-    fs::write(target, &mode).map_err(|e| {
-        format!(
-            "Failed to write {}: {} (requires root)",
-            target.display(),
-            e
-        )
-    })
+    write_sysfs_privileged(target, &mode)
 }
 
 /// Start AI session: force high perf + keep PCI powered.
