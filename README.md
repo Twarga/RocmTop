@@ -1,76 +1,94 @@
 <div align="center">
-  <img src="assets/icon.svg" width="120" alt="RocmTop logo"/>
 
-  <h1>RocmTop</h1>
+<a href="https://twarga.github.io/RocmTop/">
+  <img src="docs/banner.svg" alt="RocmTop — A lightweight AMD GPU monitor for Linux" width="100%">
+</a>
 
-  <p>
-    <strong>A lightweight AMD GPU monitor for Linux.</strong><br/>
-    Real-time temperature, clock, load, and VRAM — plus one-click power-mode
-    switching — in a tray-resident mini app.
-  </p>
+<p>
+  <a href="https://github.com/Twarga/RocmTop/releases/latest">
+    <img alt="Latest release" src="https://img.shields.io/github/v/release/Twarga/RocmTop?color=ed1c24&label=release">
+  </a>
+  <a href="https://github.com/Twarga/RocmTop/releases">
+    <img alt="Downloads" src="https://img.shields.io/github/downloads/Twarga/RocmTop/total?color=ff8a3d">
+  </a>
+  <a href="https://github.com/Twarga/RocmTop/actions/workflows/ci.yml">
+    <img alt="CI" src="https://img.shields.io/github/actions/workflow/status/Twarga/RocmTop/ci.yml?branch=main&label=CI&color=14b8a6">
+  </a>
+  <a href="https://twarga.github.io/RocmTop/">
+    <img alt="Landing page live" src="https://img.shields.io/badge/landing-live-14b8a6">
+  </a>
+  <a href="LICENSE">
+    <img alt="License" src="https://img.shields.io/github/license/Twarga/RocmTop?color=ef4852">
+  </a>
+  <a href="https://www.rust-lang.org">
+    <img alt="Rust" src="https://img.shields.io/badge/rust-2021+-b81219">
+  </a>
+  <a href="https://react.dev">
+    <img alt="React" src="https://img.shields.io/badge/react-18-9a958a">
+  </a>
+  <a href="https://tauri.app">
+    <img alt="Tauri v2" src="https://img.shields.io/badge/Tauri-v2-3b82f6">
+  </a>
+</p>
 
-  <p>
-    <a href="https://github.com/Twarga/RocmTop/actions/workflows/ci.yml">
-      <img alt="CI" src="https://github.com/Twarga/RocmTop/actions/workflows/ci.yml/badge.svg"/>
-    </a>
-    <a href="https://github.com/Twarga/RocmTop/releases/latest">
-      <img alt="Latest release" src="https://img.shields.io/github/v/release/Twarga/RocmTop?sort=semver"/>
-    </a>
-    <a href="https://github.com/Twarga/RocmTop/releases">
-      <img alt="Downloads" src="https://img.shields.io/github/downloads/Twarga/RocmTop/total"/>
-    </a>
-    <a href="LICENSE">
-      <img alt="License" src="https://img.shields.io/github/license/Twarga/RocmTop"/>
-    </a>
-    <img alt="Platform" src="https://img.shields.io/badge/platform-linux-blueviolet"/>
-    <img alt="Stack" src="https://img.shields.io/badge/stack-Tauri%20v2%20%2B%20React-informational"/>
-  </p>
+<p>
+  <a href="https://twarga.github.io/RocmTop/"><b>Landing</b></a> ·
+  <a href="https://github.com/Twarga/RocmTop/releases"><b>Releases</b></a> ·
+  <a href="CHANGELOG.md"><b>Changelog</b></a> ·
+  <a href="https://github.com/Twarga/RocmTop/issues"><b>Issues</b></a> ·
+  <a href="CONTRIBUTING.md"><b>Contributing</b></a>
+</p>
+
 </div>
-
-<!--
-  Add a demo GIF or PNG to docs/screenshots/ and reference it here, e.g.:
-  ![demo](docs/screenshots/demo.gif)
--->
 
 ---
 
-## Why
+## 📦 What's new in v1.0.1
 
-`nvtop`, `radeontop`, and `corectrl` are excellent — and all a bit much for
-the question "*is my GPU throttling, and can I pin it to HIGH for the next
-10 minutes while I run an inference script?*"
+- 🐛 **WebKitGTK flicker fix** — The DMA-BUF renderer bug on Arch / CachyOS / Fedora 40+ is now worked around automatically. No more blank white window.
+- 📝 **Troubleshooting entry** — README and landing page both document the X11 fallback (`GDK_BACKEND=x11`) for edge cases.
 
-RocmTop answers that question in a 420 × 640 window with four live dials, a
-one-click **Power Mode** toggle, and a **Runtime PM** toggle — then stays out
-of the way in your system tray.
+See the full [CHANGELOG](CHANGELOG.md).
 
-## Features
+---
 
-- 📊 **Live GPU metrics** (polled every 2 s): temperature, core clock, busy %,
-  VRAM used/total.
-- 🌡️ **Colour-coded temperature zones** — green under 80 °C, amber 80–88, red
-  above.
-- 📈 **60-second sparkline history** per metric.
-- ⚡ **One-click Power Mode** — toggle between HIGH (pinned max DPM) and AUTO
-  (driver-scaled).
-- 💤 **One-click Runtime PM** — ON (low-latency) vs AUTO (power-saving).
-- 🤖 **AI Session preset** — flip HIGH + PM ON together before a workload,
-  then restore both with one click.
-- 🔍 **Auto-detects your GPU** — scans `/sys/class/drm/cardN` for vendor
-  `0x1002` and derives the PCI path from the device symlink. No config file.
-- 🔐 **Polkit-aware** — if writing to sysfs fails with permission denied, the
-  app prompts via `pkexec` instead of silently failing.
-- 🖥️ **System tray** — close the window and it lives in the tray; left-click
-  to toggle, right-click for a menu.
-- 🎨 **Feels like a desktop app** — smooth animated values, sparkline charts,
-  skeleton loader, hover tooltips, toast confirmations.
+## Table of contents
 
-## Install
+- [Features](#-features)
+- [Quick start](#-quick-start)
+- [Usage](#-usage)
+- [How it works](#-how-it-works)
+- [Build from source](#-build-from-source)
+- [Troubleshooting](#-troubleshooting)
+- [Roadmap](#-roadmap)
+- [Contributing](#-contributing)
+- [License](#-license)
+
+---
+
+## ✨ Features
+
+| | Feature | Description |
+|---|---|---|
+| 📊 | **Live GPU metrics** | Temperature, core clock, GPU busy %, and VRAM used/total — polled every 2 s |
+| 🌡️ | **Colour-coded temps** | Green under 80 °C, amber 80–88, red above — at a glance |
+| 📈 | **60 s sparklines** | Rolling history chart per metric, no library needed |
+| ⚡ | **One-click Power Mode** | Toggle between HIGH (pinned max DPM) and AUTO (driver-scaled) |
+| 💤 | **One-click Runtime PM** | ON (low-latency) vs AUTO (power-saving) via PCI `power/control` |
+| 🤖 | **AI Session preset** | Flip HIGH + PM ON together before a workload, restore both with one click |
+| 🔐 | **Polkit-aware** | If sysfs writes fail with permission denied, prompts via `pkexec` instead of silently failing |
+| 🔍 | **Auto-detects your GPU** | Scans `/sys/class/drm/cardN` for vendor `0x1002`, derives PCI path — no config file |
+| 🖥️ | **System tray** | Close the window → lives in tray; left-click to toggle, right-click for menu |
+| 🎨 | **Desktop-grade UI** | Smooth animated values, sparkline charts, skeleton loader, hover tooltips, toast confirmations |
+| ⚙ | **~8 MB AppImage** | Single-file download, no dependencies beyond WebKitGTK and the tray library |
+
+---
+
+## 🚀 Quick start
 
 ### Download the AppImage
 
-Grab the latest build from the
-[Releases page](https://github.com/Twarga/RocmTop/releases/latest):
+Grab the latest build from the [Releases page](https://github.com/Twarga/RocmTop/releases/latest):
 
 ```bash
 chmod +x RocmTop_*.AppImage
@@ -79,8 +97,7 @@ chmod +x RocmTop_*.AppImage
 
 ### Install system dependencies
 
-RocmTop uses WebKitGTK and the libayatana-appindicator tray library. Most
-desktops already ship these; if not:
+RocmTop uses WebKitGTK and the libayatana-appindicator tray library. Most desktops already ship these; if not:
 
 <details>
 <summary><strong>Arch / CachyOS / Manjaro</strong></summary>
@@ -106,27 +123,41 @@ sudo dnf install webkit2gtk4.1 libayatana-appindicator-gtk3 polkit
 ```
 </details>
 
-## Usage
+---
 
-1. Launch the AppImage. The window shows four live metric cards plus a status
-   section for Power Mode, Runtime PM, and charger state.
-2. Hover over a label (e.g. "Runtime PM") for a tooltip explaining what each
-   mode does.
+## 📖 Usage
+
+1. Launch the AppImage. The window shows four live metric cards plus a status section for Power Mode, Runtime PM, and charger state.
+2. Hover over a label (e.g. "Runtime PM") for a tooltip explaining what each mode does.
 3. Click a toggle. If the write requires root, a polkit prompt appears.
-4. Close the window — the app hides into the tray and keeps polling. Quit
-   from the tray menu when you're done.
+4. Close the window — the app hides into the tray and keeps polling. Quit from the tray menu when you're done.
 
-**Pro tip:** before launching a ROCm / PyTorch / llama.cpp session, hit
-**Start AI Session**. When you're finished, hit **End AI Session** to return
-the GPU to AUTO.
+```
+┌─────────────────────────────────────────┐
+│  🌡️ 54°C    ⏱ 1850 MHz   ⚡ 72%    🗄️ 2GB│
+│  ████████░░░░░░░░░░  ██████████░░░░░░  │
+│                                         │
+│  ⚡ Power Mode           ○ AUTO  ● HIGH  │
+│  💤 Runtime PM          ● ON    ○ AUTO  │
+│  🔋 Charger                           ✔ │
+│                                         │
+│  🤖 [Start AI Session]                 │
+│  ┌─────────────────────────────────┐   │
+│  │ 📈      temp         ▁▄▆█▇▆▄▃    │   │
+│  │ 📈      clock        ▃▅▇█▇▅▃▁    │   │
+│  │ 📈      load         ▁▃▅█▅▃▁▃    │   │
+│  │ 📈      vram         ▂▄▆█▆▄▂▁    │   │
+│  └─────────────────────────────────┘   │
+└─────────────────────────────────────────┘
+```
 
-## How it works
+**Pro tip:** before launching a ROCm / PyTorch / llama.cpp session, hit **Start AI Session**. When you're finished, hit **End AI Session** to return the GPU to AUTO.
 
-RocmTop is a thin wrapper around `/sys/class/drm/cardN/device/…` and
-`/sys/bus/pci/devices/…/power/control`. There is no elevated daemon — the
-app runs entirely as your user. The backend is Rust (~500 LoC including
-tests), the frontend is TypeScript + React (no UI framework, no chart
-library, no animation library).
+---
+
+## 🏗 How it works
+
+RocmTop is a thin wrapper around `/sys/class/drm/cardN/device/…` and `/sys/bus/pci/devices/…/power/control`. There is no elevated daemon — the app runs entirely as your user.
 
 ```
 ┌────────────────────────────┐          ┌─────────────────────────────┐
@@ -141,7 +172,11 @@ library, no animation library).
                                           /sys/bus/pci/devices/.../power
 ```
 
-## Build from source
+**Stack:** Rust · Tauri v2 · React 18 · TypeScript · Vite · sysfs · PolicyKit
+
+---
+
+## 🛠 Build from source
 
 ```bash
 # Prerequisites (Arch example)
@@ -158,38 +193,32 @@ npm run tauri dev
 npm run tauri build
 ```
 
-## Troubleshooting
+---
+
+## 🔧 Troubleshooting
 
 **The tray icon doesn't appear.**
-Install `libayatana-appindicator3` for your distro (see above). On GNOME you
-may also need the
-[AppIndicator extension](https://extensions.gnome.org/extension/615/appindicator-support/).
+Install `libayatana-appindicator3` for your distro (see [Quick start](#-quick-start)). On GNOME you may also need the [AppIndicator extension](https://extensions.gnome.org/extension/615/appindicator-support/).
 
 **Toggles say "permission denied" but no polkit prompt appears.**
-Install `polkit` and a PolicyKit authentication agent appropriate for your
-desktop (e.g. `polkit-gnome` on GNOME, `lxqt-policykit` on LXQt, `polkit-kde-agent`
-on KDE). As a last resort you can `sudo chmod a+w` the affected sysfs node
-for the current boot.
+Install `polkit` and a PolicyKit authentication agent appropriate for your desktop (e.g. `polkit-gnome` on GNOME, `lxqt-policykit` on LXQt, `polkit-kde-agent` on KDE). As a last resort you can `sudo chmod a+w` the affected sysfs node for the current boot.
 
 **All values show 0.**
-Either no AMD GPU is present or the `amdgpu` driver isn't loaded. Check
-`lspci -nn | grep -Ei 'vga|3d'` — vendor `1002` means AMD. Then `dmesg |
-grep -i amdgpu` to confirm the driver loaded.
+Either no AMD GPU is present or the `amdgpu` driver isn't loaded. Check `lspci -nn | grep -Ei 'vga|3d'` — vendor `1002` means AMD. Then `dmesg | grep -i amdgpu` to confirm the driver loaded.
 
 **Window opens but everything is blank.**
 WebKitGTK is missing or corrupted. Reinstall `webkit2gtk-4.1` and relaunch.
 
 **Window flickers or stays white on Arch / CachyOS / Fedora 40+.**
-This is a WebKitGTK 2.48+ DMA-BUF renderer bug. RocmTop v1.0.1+ works
-around it automatically by setting `WEBKIT_DISABLE_DMABUF_RENDERER=1`
-before launching the webview. If you're still seeing it, you can also
-try forcing X11:
+This is a WebKitGTK 2.48+ DMA-BUF renderer bug. RocmTop v1.0.1+ works around it automatically by setting `WEBKIT_DISABLE_DMABUF_RENDERER=1` before launching the webview. If you're still seeing it, you can also try forcing X11:
 
 ```bash
 GDK_BACKEND=x11 ./RocmTop_*.AppImage
 ```
 
-## Roadmap
+---
+
+## 🗺 Roadmap
 
 - [ ] Settings panel (polling interval, launch at startup, theme)
 - [ ] Custom temperature thresholds
@@ -201,21 +230,29 @@ GDK_BACKEND=x11 ./RocmTop_*.AppImage
 
 See [issues](https://github.com/Twarga/RocmTop/issues) for active work.
 
-## Contributing
+---
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Short version: small focused PRs,
-`cargo fmt` + `cargo clippy -D warnings` + `cargo test` must pass, and the
-change should fit [the stated scope](CONTRIBUTING.md#scope-reminder).
+## 🤝 Contributing
 
-All interactions are governed by the
-[Code of Conduct](CODE_OF_CONDUCT.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md). Short version: small focused PRs, `cargo fmt` + `cargo clippy -D warnings` + `cargo test` must pass, and the change should fit [the stated scope](CONTRIBUTING.md#scope-reminder).
 
-## License
+All interactions are governed by the [Code of Conduct](CODE_OF_CONDUCT.md).
+
+---
+
+## 📄 License
 
 [MIT](LICENSE) © 2026 Twarga
 
-## Acknowledgements
+---
+
+## 🙏 Acknowledgements
 
 - [Tauri](https://tauri.app/) for making a tiny Rust-backed webview app possible.
-- The amdgpu kernel maintainers for exposing every metric this app needs via
-  plain text files.
+- The amdgpu kernel maintainers for exposing every metric this app needs via plain text files.
+
+---
+
+<div align="center">
+Made with ☕ by <a href="https://github.com/Twarga">Twarga</a>
+</div>
