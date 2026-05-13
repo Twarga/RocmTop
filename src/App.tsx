@@ -1,23 +1,36 @@
 import { useState, useEffect } from 'react'
 import { invoke } from '@tauri-apps/api/core'
 import { GpuStats } from './types/gpu'
+import { useToast } from './hooks/useToast'
+import { Toast } from './components/Toast'
 
 function App() {
   const [stats, setStats] = useState<GpuStats | null>(null)
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date())
+  const { toast, show, dismiss } = useToast()
 
   useEffect(() => {
-    const poll = setInterval(async () => {
+    let cancelled = false
+
+    const tick = async () => {
       try {
         const data = await invoke<GpuStats>('get_all_stats')
-        setStats(data)
-        setLastUpdate(new Date())
+        if (!cancelled) {
+          setStats(data)
+          setLastUpdate(new Date())
+        }
       } catch (e) {
-        console.error('Failed to get stats:', e)
+        if (!cancelled) show(`Failed to read GPU stats: ${formatError(e)}`, 'error')
       }
-    }, 2000)
-    return () => clearInterval(poll)
-  }, [])
+    }
+
+    tick()
+    const poll = setInterval(tick, 2000)
+    return () => {
+      cancelled = true
+      clearInterval(poll)
+    }
+  }, [show])
 
   const getTempColor = (temp: number) => {
     if (temp < 80) return 'temp-normal'
@@ -34,32 +47,36 @@ function App() {
   const setPowerMode = async (mode: string) => {
     try {
       await invoke('set_power_mode', { mode })
+      show(`Power mode → ${mode.toUpperCase()}`, 'success')
     } catch (e) {
-      console.error('Failed to set power mode:', e)
+      show(`Power mode failed: ${formatError(e)}`, 'error')
     }
   }
 
   const setRuntimePm = async (mode: string) => {
     try {
       await invoke('set_runtime_pm', { mode })
+      show(`Runtime PM → ${mode.toUpperCase()}`, 'success')
     } catch (e) {
-      console.error('Failed to set runtime PM:', e)
+      show(`Runtime PM failed: ${formatError(e)}`, 'error')
     }
   }
 
   const startAiSession = async () => {
     try {
       await invoke('start_ai_session')
+      show('AI session started (HIGH + PM ON)', 'success')
     } catch (e) {
-      console.error('Failed to start AI session:', e)
+      show(`Start failed: ${formatError(e)}`, 'error')
     }
   }
 
   const endAiSession = async () => {
     try {
       await invoke('end_ai_session')
+      show('AI session ended (AUTO)', 'success')
     } catch (e) {
-      console.error('Failed to end AI session:', e)
+      show(`End failed: ${formatError(e)}`, 'error')
     }
   }
 
@@ -70,7 +87,12 @@ function App() {
   const secondsAgo = Math.floor((new Date().getTime() - lastUpdate.getTime()) / 1000)
 
   if (!stats) {
-    return <div className="app">Loading...</div>
+    return (
+      <div className="app">
+        Loading...
+        <Toast toast={toast} onDismiss={dismiss} />
+      </div>
+    )
   }
 
   return (
@@ -197,8 +219,25 @@ function App() {
         <span>Last updated: {secondsAgo}s ago</span>
         <span>v1.0.0</span>
       </div>
+
+      <Toast toast={toast} onDismiss={dismiss} />
     </div>
   )
+}
+
+/**
+ * Convert unknown Tauri invoke error to short human-readable text.
+ * The Rust side returns a String via Result<(), String>; Tauri passes it
+ * through as the rejected value. Keep the toast compact.
+ */
+function formatError(e: unknown): string {
+  if (typeof e === 'string') return e
+  if (e instanceof Error) return e.message
+  try {
+    return JSON.stringify(e)
+  } catch {
+    return String(e)
+  }
 }
 
 export default App
